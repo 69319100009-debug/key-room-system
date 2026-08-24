@@ -17,14 +17,14 @@
     .history-container { display: flex; flex-direction: column; gap: 12px; }
     .history-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; }
     .info-group { display: flex; flex-direction: column; gap: 4px; }
-    .room-badge { display: inline-block; background: #e0e7ff; color: #3730a3; font-weight: bold; padding: 2px 8px; border-radius: 6px; font-size: 13px; width: fit-content; }
-    .user-name { font-weight: bold; font-size: 15px; color: #1e293b; margin-top: 2px; }
+    .room-badge { display: inline-block; background: #e0e7ff; color: #3730a3; font-weight: bold; padding: 3px 10px; border-radius: 6px; font-size: 13px; width: fit-content; }
+    .user-name { font-weight: bold; font-size: 15px; color: #1e293b; margin-top: 4px; }
     .user-id { font-size: 12px; color: #64748b; }
-    .time-text { font-size: 12px; color: #475569; margin-top: 6px; }
+    .time-text { font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.5; }
     
     .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: center; }
-    .status-borrowing { background-color: #fef3c7; color: #92400e; }
-    .status-returned { background-color: #d1fae5; color: #065f46; }
+    .status-borrowing { background-color: #d1fae5; color: #065f46; }
+    .status-returned { background-color: #e2e8f0; color: #475569; }
   </style>
 </head>
 <body>
@@ -43,34 +43,44 @@
   </div>
 
   <script>
+    // ฐานข้อมูลห้องให้ตรงกับ borrow.html
+    const roomsData = [
+      { keyId: "K121", roomName: "ห้อง 121" },
+      { keyId: "K122", roomName: "ห้อง 122" },
+      { keyId: "K124", roomName: "ห้อง 124" },
+      { keyId: "K125", roomName: "ห้อง 125" },
+      { keyId: "K141", roomName: "ห้อง 141" },
+      { keyId: "K142", roomName: "ห้อง 142" },
+      { keyId: "K145", roomName: "ห้อง 145" }
+    ];
+
     function renderHistory() {
       const container = document.getElementById('historyContainer');
-      
-      let logs = JSON.parse(localStorage.getItem('borrowLogs')) || JSON.parse(localStorage.getItem('history')) || [];
+      let logs = JSON.parse(localStorage.getItem('borrowLogs')) || [];
 
       if (logs.length === 0) {
         container.innerHTML = `<div style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</div>`;
         return;
       }
 
-      container.innerHTML = logs.map(item => {
-        const name = item.name || item.studentName || item.borrowerName || item.borrower || 'ไม่ระบุชื่อ';
-        const id = item.id || item.studentId || item.code || item.borrowerId || '-';
+      container.innerHTML = logs.slice().reverse().map(item => {
+        // ดึงชื่อ นามสกุล และ ID ให้ตรงกับโครงสร้าง borrowForm
+        const name = item.borrowerName || item.name || 'ไม่ระบุชื่อ';
+        const id = item.borrowerId || item.id || '-';
         
-        // ดักจับชื่อตัวแปรของห้องทุกกรณีที่เป็นไปได้
-        const room = item.room || item.roomNum || item.roomNumber || item.room_number || 
-                     item.roomName || item.roomId || item.selectedRoom || item.keyRoom || 
-                     item.key || item.location || 'ไม่ระบุห้อง';
-                     
-        const borrowTime = item.borrowTime || item.time || item.date || item.borrowDate || '-';
-        const returnTime = item.returnTime || item.returnDate || '-';
-        const isReturned = returnTime !== '-' && returnTime !== '';
-        const status = item.status || (isReturned ? 'คืนแล้ว' : 'ยืมอยู่');
+        // แปลง keyId (เช่น K121) เป็นชื่อห้อง (เช่น ห้อง 121)
+        const roomObj = roomsData.find(r => r.keyId === item.keyId);
+        const roomDisplay = roomObj ? `${roomObj.roomName} (${item.keyId})` : (item.keyId || 'ไม่ระบุห้อง');
+
+        const borrowTime = item.borrowTime || '-';
+        const returnTime = item.returnTime || '-';
+        const isReturned = item.status === 'คืนแล้ว' || (returnTime !== '-' && returnTime !== '');
+        const statusText = item.status || (isReturned ? 'คืนแล้ว' : 'ยืมอยู่');
 
         return `
           <div class="history-card">
             <div class="info-group">
-              <span class="room-badge">ห้อง ${room}</span>
+              <span class="room-badge">🏫 ${roomDisplay}</span>
               <div class="user-name">${name}</div>
               <div class="user-id">ID: ${id}</div>
               <div class="time-text">
@@ -80,7 +90,7 @@
             </div>
             <div>
               <span class="status-badge ${isReturned ? 'status-returned' : 'status-borrowing'}">
-                ${status}
+                ${statusText}
               </span>
             </div>
           </div>
@@ -91,7 +101,6 @@
     function clearHistory() {
       if (confirm('คุณต้องการล้างข้อมูลประวัติทั้งหมดใช่หรือไม่?')) {
         localStorage.removeItem('borrowLogs');
-        localStorage.removeItem('history');
         renderHistory();
       }
     }
