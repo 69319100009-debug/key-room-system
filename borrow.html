@@ -1,547 +1,121 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ยืมกุญแจ | Key Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ยืมกุญแจ | Key Room</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f4f7fb; color: #17213a; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: linear-gradient(180deg, #17295d, #285edc); color: white; padding: 20px 10px; display: flex; flex-direction: column; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,.2); }
+        .logo-icon { font-size: 25px; }
+        .logo h1 { font-size: 18px; }
+        .logo p { font-size: 10px; color: #cbd6f2; }
+        .menu-title { font-size: 11px; color: #b8c7ed; padding: 0 12px 10px; }
+        .menu a { display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 12px; color: white; text-decoration: none; border-radius: 10px; font-size: 13px; }
+        .menu a:hover, .menu a.active { background: rgba(255,255,255,.16); }
+        .admin-profile { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .admin-avatar { width: 35px; height: 35px; background: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .main { margin-left: 220px; min-height: 100vh; }
+        .header { height: 70px; background: white; border-bottom: 1px solid #e5e9f0; display: flex; align-items: center; justify-content: space-between; padding: 0 35px; }
+        .header h2 { font-size: 18px; }
+        .date { background: #eef5ff; color: #2861d7; padding: 6px 12px; border-radius: 8px; font-size: 11px; }
+        .content { padding: 30px 35px; display: flex; justify-content: center; }
+        .form-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 14px; border: 1px solid #e2e8f1; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
+        .btn-submit { width: 100%; height: 45px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #1d4ed8; }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Arial,"Noto Sans Thai",sans-serif;
-    background:#f4f7fb;
-    color:#17213a;
-}
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:220px;
-    height:100vh;
-    background:linear-gradient(180deg,#17295d,#285edc);
-    color:white;
-    padding:20px 10px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:10px;
-    margin-bottom:25px;
-    border-bottom:1px solid rgba(255,255,255,.2);
-}
-
-.logo-icon{
-    font-size:25px;
-}
-
-.logo h1{
-    font-size:18px;
-}
-
-.logo p{
-    font-size:10px;
-    color:#cbd6f2;
-}
-
-.menu-title{
-    font-size:11px;
-    color:#b8c7ed;
-    padding:0 12px 10px;
-}
-
-.menu{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-}
-
-.menu a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    height:45px;
-    padding:0 12px;
-    color:white;
-    text-decoration:none;
-    border-radius:10px;
-    font-size:13px;
-}
-
-.menu a:hover,
-.menu a.active{
-    background:rgba(255,255,255,.16);
-}
-
-.main{
-    margin-left:220px;
-    min-height:100vh;
-}
-
-.header{
-    height:110px;
-    background:white;
-    border-bottom:1px solid #e5e9f0;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 35px;
-}
-
-.breadcrumb{
-    color:#9ca8ba;
-    font-size:11px;
-    margin-bottom:5px;
-}
-
-.header h2{
-    font-size:20px;
-}
-
-.date{
-    background:#eef5ff;
-    color:#2861d7;
-    padding:9px 14px;
-    border-radius:9px;
-    font-size:11px;
-}
-
-.content{
-    max-width:850px;
-    margin:auto;
-    padding:35px;
-}
-
-.form-card{
-    background:white;
-    border:1px solid #e2e8f1;
-    border-radius:16px;
-    padding:30px;
-    box-shadow:0 10px 30px rgba(30,50,90,.06);
-}
-
-.title{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-bottom:30px;
-}
-
-.title-icon{
-    width:55px;
-    height:55px;
-    border-radius:13px;
-    background:#edf5ff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:27px;
-}
-
-.title h1{
-    font-size:22px;
-}
-
-.title p{
-    color:#8d9aaf;
-    font-size:11px;
-    margin-top:4px;
-}
-
-.form-group{
-    margin-bottom:20px;
-}
-
-label{
-    display:block;
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-input,
-select,
-textarea{
-    width:100%;
-    padding:12px 14px;
-    border:1px solid #dce3ed;
-    border-radius:9px;
-    font-family:inherit;
-    font-size:12px;
-    outline:none;
-    background:white;
-}
-
-textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:#285edc;
-}
-
-.buttons{
-    display:flex;
-    gap:10px;
-    margin-top:25px;
-}
-
-button,
-.cancel{
-    border:none;
-    border-radius:9px;
-    padding:12px 22px;
-    font-family:inherit;
-    font-size:12px;
-    font-weight:bold;
-    cursor:pointer;
-    text-decoration:none;
-}
-
-button{
-    background:#285edc;
-    color:white;
-}
-
-button:hover{
-    background:#1e4fbe;
-}
-
-.cancel{
-    background:#eef1f5;
-    color:#64748b;
-}
-
-@media(max-width:700px){
-
-    .sidebar{
-        width:70px;
-    }
-
-    .logo div:last-child,
-    .menu-title,
-    .menu a span:last-child{
-        display:none;
-    }
-
-    .menu a{
-        justify-content:center;
-    }
-
-    .main{
-        margin-left:70px;
-    }
-
-    .content{
-        padding:20px 15px;
-    }
-
-    .date{
-        display:none;
-    }
-}
-</style>
+        @media (max-width: 768px) {
+            .sidebar { position: relative; width: 100%; height: auto; padding: 15px; }
+            .logo { margin-bottom: 10px; }
+            .menu { display: flex; flex-wrap: wrap; gap: 5px; }
+            .menu a { flex: 1 1 calc(50% - 5px); height: 40px; font-size: 12px; justify-content: center; }
+            .admin-profile { display: none; }
+            .main { margin-left: 0; }
+            .header { padding: 0 15px; }
+            .content { padding: 15px; }
+        }
+    </style>
 </head>
-
 <body>
-
 <aside class="sidebar">
-
-    <div class="logo">
-
-        <div class="logo-icon">🔑</div>
-
-        <div>
-            <h1>Key Room</h1>
-            <p>ระบบยืม-คืนกุญแจ</p>
-        </div>
-
+    <div>
+        <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบยืม-คืนกุญแจ</p></div></div>
+        <div class="menu-title">เมนูหลัก</div>
+        <nav class="menu">
+            <a href="index.html"><span>🏠</span><span>หน้าหลัก</span></a>
+            <a href="rooms.html"><span>🏫</span><span>ห้องเรียน</span></a>
+            <a href="borrow.html" class="active"><span>🔑</span><span>ยืมกุญแจ</span></a>
+            <a href="return.html"><span>↩️</span><span>คืนกุญแจ</span></a>
+            <a href="history.html"><span>📋</span><span>ประวัติ</span></a>
+        </nav>
     </div>
-
-    <div class="menu-title">
-        เมนูหลัก
-    </div>
-
-    <nav class="menu">
-
-        <a href="index.html">
-            <span>🏠</span>
-            <span>หน้าหลัก</span>
-        </a>
-
-        <a href="rooms.html">
-            <span>🏫</span>
-            <span>ห้องเรียน</span>
-        </a>
-
-        <a href="borrow.html" class="active">
-            <span>🔑</span>
-            <span>ยืมกุญแจ</span>
-        </a>
-
-        <a href="return.html">
-            <span>↩️</span>
-            <span>คืนกุญแจ</span>
-        </a>
-
-        <a href="history.html">
-            <span>📋</span>
-            <span>ประวัติ</span>
-        </a>
-
-    </nav>
-
+    <div class="admin-profile"><div class="admin-avatar">A</div><div><div style="font-size:12px; font-weight:bold;">ผู้ดูแลระบบ</div><div style="font-size:10px; color:#cbd6f2;">Administrator</div></div></div>
 </aside>
-
-
 <main class="main">
-
     <header class="header">
-
-        <div>
-
-            <div class="breadcrumb">
-                หน้าหลัก / ยืมกุญแจ
-            </div>
-
-            <h2>
-                ยืมกุญแจ
-            </h2>
-
-        </div>
-
-        <div class="date-box">
-            📅 24 สิงหาคม 2569
-        </div>
-
+        <div><div style="font-size: 11px; color: #94a3b8;">หน้าหลัก / ยืมกุญแจ</div><h2>บันทึกการยืมกุญแจ</h2></div>
+        <div class="date">📅 24 สิงหาคม 2569</div>
     </header>
-
-
     <section class="content">
-
         <div class="form-card">
-
-            <div class="title">
-
-                <div class="title-icon">
-                    🔑
-                </div>
-
-                <div>
-
-                    <h1>
-                        บันทึกการยืมกุญแจ
-                    </h1>
-
-                    <p>
-                        กรอกข้อมูลสำหรับการยืมกุญแจห้องเรียน
-                    </p>
-
-                </div>
-
-            </div>
-
-
+            <h3 style="margin-bottom: 5px;">🔑 ทำรายการยืมกุญแจ</h3>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">กรอกข้อมูลเพื่อลงทะเบียนยืมกุญแจห้องเรียน</p>
             <form id="borrowForm">
-
                 <div class="form-group">
-
-                    <label>
-                        ชื่อผู้ยืม
-                    </label>
-
-                    <input
-                        type="text"
-                        id="borrower"
-                        placeholder="กรอกชื่อผู้ยืม"
-                        required
-                    >
-
+                    <label>ชื่อผู้ยืม *</label>
+                    <input type="text" id="borrowerName" placeholder="กรอกชื่อ-นามสกุล หรือ รหัส" required>
                 </div>
-
-
                 <div class="form-group">
-
-                    <label>
-                        ห้องเรียน
-                    </label>
-
-                    <select id="room" required>
-
-                        <option value="">
-                            -- เลือกห้องเรียน --
-                        </option>
-
-                        <option value="ห้อง 121">
-                            ห้อง 121
-                        </option>
-
-                        <option value="ห้อง 122">
-                            ห้อง 122
-                        </option>
-
-                        <option value="ห้อง 124">
-                            ห้อง 124
-                        </option>
-
-                        <option value="ห้อง 125">
-                            ห้อง 125
-                        </option>
-
-                        <option value="ห้อง 141">
-                            ห้อง 141
-                        </option>
-
-                        <option value="ห้อง 142">
-                            ห้อง 142
-                        </option>
-
-                        <option value="ห้อง 145">
-                            ห้อง 145
-                        </option>
-
-                    </select>
-
+                    <label>เลือกห้องเรียน *</label>
+                    <select id="roomSelect" required><option value="">-- เลือกห้องเรียน --</option></select>
                 </div>
-
-
                 <div class="form-group">
-
-                    <label>
-                        สภาพกุญแจ
-                    </label>
-
-                    <select id="condition" required>
-
-                        <option value="">
-                            -- เลือกสภาพกุญแจ --
-                        </option>
-
-                        <option value="ปกติ">
-                            ปกติ
-                        </option>
-
-                        <option value="ชำรุด">
-                            ชำรุด
-                        </option>
-
-                        <option value="สูญหาย">
-                            สูญหาย
-                        </option>
-
-                    </select>
-
+                    <label>วัตถุประสงค์การใช้ห้อง</label>
+                    <input type="text" id="purpose" placeholder="เช่น การเรียนการสอน, ประชุม">
                 </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        หมายเหตุ
-                    </label>
-
-                    <textarea
-                        id="note"
-                        placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)"
-                    ></textarea>
-
-                </div>
-
-
-                <div class="buttons">
-
-                    <button type="submit">
-                        🔑 ยืนยันการยืม
-                    </button>
-
-                    <a
-                        href="index.html"
-                        class="cancel"
-                    >
-                        ยกเลิก
-                    </a>
-
-                </div>
-
+                <button type="submit" class="btn-submit">ยืนยันการยืมกุญแจ</button>
             </form>
-
         </div>
-
     </section>
-
 </main>
-
-
 <script>
-// ฟังก์ชันดึงเลขห้องอย่างเดียว (ป้องกันปัญหาพิมพ์คำว่า "ห้อง" ไม่เหมือนกัน)
-function getRoomNumber(str) {
-    return str ? str.replace(/[^0-9]/g, '') : '';
-}
-
-function getHistory() {
-    try {
-        return JSON.parse(localStorage.getItem("keyHistory")) || [];
-    } catch(e) { return []; }
-}
-
-function isRoomBorrowed(roomVal) {
-    const history = getHistory();
-    const targetNum = getRoomNumber(roomVal);
-    
-    // ค้นหารายการล่าสุดของห้องนี้
-    const lastRecord = history.slice().reverse().find(item => getRoomNumber(item.room) === targetNum);
-    return lastRecord && lastRecord.type === "ยืม";
-}
-
-// อัปเดต Dropdown ไม่ให้เลือกห้องที่ถูกยืมอยู่
-function updateBorrowDropdown() {
-    const roomSelect = document.getElementById("room");
-    if (!roomSelect) return;
-    
-    Array.from(roomSelect.options).forEach(opt => {
-        if (opt.value && isRoomBorrowed(opt.value)) {
-            opt.disabled = true;
-            opt.textContent = opt.value + " (กำลังถูกยืมอยู่)";
+const allRooms = ["ห้อง 121", "ห้อง 122", "ห้อง 124", "ห้อง 125", "ห้อง 141", "ห้อง 142", "ห้อง 145"];
+function getRoomNum(str) { return str ? str.replace(/[^0-9]/g, '') : ''; }
+function loadAvailableRooms() {
+    const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
+    const select = document.getElementById("roomSelect");
+    select.innerHTML = '<option value="">-- เลือกห้องเรียน --</option>';
+    allRooms.forEach(room => {
+        const roomNum = getRoomNum(room);
+        const lastRecord = history.slice().reverse().find(item => getRoomNum(item.room) === roomNum);
+        if (!lastRecord || lastRecord.type === "คืน") {
+            const opt = document.createElement("option");
+            opt.value = room;
+            opt.textContent = room;
+            select.appendChild(opt);
         }
     });
 }
-updateBorrowDropdown();
-
-document.getElementById("borrowForm").addEventListener("submit", function(e){
+document.getElementById("borrowForm").addEventListener("submit", function(e) {
     e.preventDefault();
-    const room = document.getElementById("room").value;
-    
-    if (isRoomBorrowed(room)) {
-        alert("ห้องนี้ถูกยืมไปแล้ว ยังไม่ได้ทำรายการคืน!");
-        return;
-    }
-
-    let history = getHistory();
-    history.push({
-        id: Date.now(),
-        type: "ยืม",
-        name: document.getElementById("borrower").value.trim(),
-        room: room,
-        condition: document.getElementById("condition").value,
-        note: document.getElementById("note").value.trim(),
-        date: new Date().toLocaleString("th-TH")
-    });
-    
+    const name = document.getElementById("borrowerName").value;
+    const room = document.getElementById("roomSelect").value;
+    const purpose = document.getElementById("purpose").value;
+    if(!room) return alert("กรุณาเลือกห้องเรียน");
+    const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('th-TH') + " " + now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+    history.push({ id: Date.now(), type: "ยืม", name: name, room: room, purpose: purpose, date: dateStr });
     localStorage.setItem("keyHistory", JSON.stringify(history));
-    alert("บันทึกการยืมสำเร็จ");
-    window.location.href = "rooms.html";
+    alert("บันทึกการยืมกุญแจ " + room + " เรียบร้อย!");
+    window.location.href = "index.html";
 });
+loadAvailableRooms();
 </script>
-
 </body>
 </html>
