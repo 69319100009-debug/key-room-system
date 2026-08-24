@@ -4,7 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ประวัติการยืม-คืน | Key Room System</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #f0f4f8; padding: 16px; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .breadcrumb { font-size: 13px; color: #64748b; margin-bottom: 4px; }
+    .page-title { font-size: 20px; font-weight: bold; color: #0f172a; margin-bottom: 16px; }
+    .card { background: #ffffff; border-radius: 16px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .btn-wrapper { text-align: center; margin-bottom: 16px; }
+    .btn-clear { background-color: #ff3b30; color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    
+    /* Layout แสดงผลประวัติแบบ Card บนมือถือ */
+    .history-container { display: flex; flex-direction: column; gap: 12px; }
+    .history-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .info-group { display: flex; flex-direction: column; gap: 4px; }
+    .room-badge { display: inline-block; background: #e0e7ff; color: #3730a3; font-weight: bold; padding: 2px 8px; border-radius: 6px; font-size: 13px; width: fit-content; }
+    .user-name { font-weight: bold; font-size: 15px; color: #1e293b; margin-top: 2px; }
+    .user-id { font-size: 12px; color: #64748b; }
+    .time-text { font-size: 12px; color: #475569; margin-top: 6px; }
+    
+    .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: center; }
+    .status-borrowing { background-color: #d1fae5; color: #065f46; }
+    .status-returned { background-color: #e2e8f0; color: #475569; }
+  </style>
 </head>
 <body>
 
@@ -17,62 +39,49 @@
         <button class="btn-clear" onclick="clearHistory()">ล้างข้อมูลประวัติ</button>
       </div>
 
-      <div class="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>ผู้ยืม (ID / ชื่อ)</th>
-              <th>ห้อง</th>
-              <th>วันเวลาที่ยืม</th>
-              <th>วันเวลาที่คืน</th>
-              <th>สถานะ</th>
-            </tr>
-          </thead>
-          <tbody id="historyList">
-            <!-- ข้อมูลจะขึ้นตรงนี้อัตโนมัติ -->
-          </tbody>
-        </table>
-      </div>
+      <!-- รายการประวัติจะถูกเรนเดอร์ลงในนี้ -->
+      <div id="historyContainer" class="history-container"></div>
     </div>
   </div>
 
   <script>
     function renderHistory() {
-      const historyList = document.getElementById('historyList');
+      const container = document.getElementById('historyContainer');
       
+      // ดึงข้อมูลจาก localStorage
       let logs = JSON.parse(localStorage.getItem('borrowLogs')) || JSON.parse(localStorage.getItem('history')) || [];
 
       if (logs.length === 0) {
-        historyList.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</td></tr>`;
+        container.innerHTML = `<div style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</div>`;
         return;
       }
 
-      historyList.innerHTML = logs.map(item => {
+      container.innerHTML = logs.map(item => {
         const name = item.name || item.studentName || item.borrowerName || item.borrower || 'ไม่ระบุชื่อ';
         const id = item.id || item.studentId || item.code || item.borrowerId || '-';
-        // ดักจับชื่อตัวแปรของห้อง
-        const room = item.room || item.roomNumber || item.roomName || item.keyRoom || '-';
+        const room = item.room || item.roomNumber || item.roomName || item.keyRoom || 'ไม่ระบุห้อง';
         const borrowTime = item.borrowTime || item.time || item.date || item.borrowDate || '-';
         const returnTime = item.returnTime || item.returnDate || '-';
-        const status = item.status || (item.returnTime ? 'คืนแล้ว' : 'ยืมอยู่');
+        const isReturned = returnTime !== '-' && returnTime !== '';
+        const status = item.status || (isReturned ? 'คืนแล้ว' : 'ยืมอยู่');
 
         return `
-          <tr>
-            <td>
-              <div style="font-weight: bold; color: #1e293b;">${name}</div>
-              <div style="font-size: 12px; color: #64748b;">(${id})</div>
-            </td>
-            <td>
-              <span style="font-weight: 600; color: #2563eb;">${room}</span>
-            </td>
-            <td>${borrowTime}</td>
-            <td>${returnTime}</td>
-            <td>
-              <span class="status-badge" style="background-color: ${status === 'คืนแล้ว' ? '#d1fae5' : '#fef3c7'}; color: ${status === 'คืนแล้ว' ? '#065f46' : '#92400e'};">
+          <div class="history-card">
+            <div class="info-group">
+              <span class="room-badge">ห้อง ${room}</span>
+              <div class="user-name">${name}</div>
+              <div class="user-id">ID: ${id}</div>
+              <div class="time-text">
+                <div>📌 <b>ยืม:</b> ${borrowTime}</div>
+                <div>📌 <b>คืน:</b> ${returnTime}</div>
+              </div>
+            </div>
+            <div>
+              <span class="status-badge ${isReturned ? 'status-returned' : 'status-borrowing'}">
                 ${status}
               </span>
-            </td>
-          </tr>
+            </div>
+          </div>
         `;
       }).join('');
     }
