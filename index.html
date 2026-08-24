@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>หน้าหลัก | Key Room System</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f4f7fb; color: #17213a; }
-        .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: linear-gradient(180deg, #17295d, #285edc); color: white; padding: 20px 10px; display: flex; flex-direction: column; justify-content: space-between; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: #f4f7fb; color: #17213a; }
+        
+        /* Layout Sidebar & Main */
+        .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: linear-gradient(180deg, #17295d, #285edc); color: white; padding: 20px 10px; display: flex; flex-direction: column; justify-content: space-between; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,.2); }
         .logo-icon { font-size: 25px; }
         .logo h1 { font-size: 18px; }
@@ -15,28 +17,58 @@
         .menu-title { font-size: 11px; color: #b8c7ed; padding: 0 12px 10px; }
         .menu a { display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 12px; color: white; text-decoration: none; border-radius: 10px; font-size: 13px; }
         .menu a:hover, .menu a.active { background: rgba(255,255,255,.16); }
-        .admin-profile { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
-        .admin-avatar { width: 35px; height: 35px; background: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .main { margin-left: 220px; min-height: 100vh; }
         .header { height: 70px; background: white; border-bottom: 1px solid #e5e9f0; display: flex; align-items: center; justify-content: space-between; padding: 0 35px; }
-        .content { padding: 30px 35px; display: flex; flex-direction: column; gap: 25px; }
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f1; }
-        .card h3 { font-size: 28px; color: #2563eb; margin-top: 10px; }
-        .card p { font-size: 12px; color: #64748b; }
+        
+        /* Content Area */
+        .content { padding: 30px 35px; display: flex; flex-direction: column; gap: 24px; }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-card { background: white; padding: 24px; border-radius: 14px; border: 1px solid #e2e8f1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .stat-card .title { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 8px; }
+        .stat-card .value { font-size: 32px; font-weight: bold; }
+        .val-blue { color: #2563eb; }
+        .val-green { color: #16a34a; }
+        .val-red { color: #dc2626; }
+
+        /* Dashboard Lower Section Grid (คอมพิวเตอร์) */
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        
+        /* Card Boxes */
+        .dashboard-card { background: white; padding: 24px; border-radius: 14px; border: 1px solid #e2e8f1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+        .card-header h3 { font-size: 16px; color: #0f172a; }
+        
+        /* Urgent Notice Styles */
+        .notice-box { background: #fff1f2; border-left: 4px solid #f43f5e; padding: 12px 14px; border-radius: 8px; margin-bottom: 12px; }
+        .notice-title { font-size: 13px; font-weight: bold; color: #be123c; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .notice-desc { font-size: 12px; color: #475569; line-height: 1.4; }
+        
+        /* Table Quick View */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+        th { color: #64748b; font-weight: 600; background: #f8fafc; }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
 
         @media (max-width: 768px) {
             .sidebar { position: relative; width: 100%; height: auto; padding: 15px; }
             .menu { display: flex; flex-wrap: wrap; gap: 5px; }
             .menu a { flex: 1 1 calc(50% - 5px); height: 40px; font-size: 12px; justify-content: center; }
-            .admin-profile { display: none; }
             .main { margin-left: 0; }
             .header { padding: 0 15px; }
             .content { padding: 15px; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
 <aside class="sidebar">
     <div>
         <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบจัดการกุญแจ</p></div></div>
@@ -49,45 +81,119 @@
             <a href="history.html"><span>📋</span><span>ประวัติ</span></a>
         </nav>
     </div>
-    <div class="admin-profile"><div class="admin-avatar">A</div><div><div style="font-size:12px; font-weight:bold;">ผู้ดูแลระบบ</div><div style="font-size:10px; color:#cbd6f2;">Administrator</div></div></div>
 </aside>
+
 <main class="main">
     <header class="header">
         <div><div style="font-size: 11px; color: #94a3b8;">หน้าหลัก</div><h2>แดชบอร์ดสรุปสถานะ</h2></div>
     </header>
+
     <section class="content">
-        <div class="grid-stats">
-            <div class="card"><p>ห้องทั้งหมด</p><h3 id="totalRooms">7</h3></div>
-            <div class="card"><p>กุญแจว่าง (พร้อมยืม)</p><h3 id="availableRooms" style="color:#16a34a;">0</h3></div>
-            <div class="card"><p>กุญแจถูกยืมอยู่</p><h3 id="borrowedRooms" style="color:#dc2626;">0</h3></div>
+        <!-- 3 การ์ดตัวเลขสรุป -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="title">ห้องทั้งหมด</div>
+                <div class="value val-blue" id="totalRoomsCount">7</div>
+            </div>
+            <div class="stat-card">
+                <div class="title">กุญแจว่าง (พร้อมยืม)</div>
+                <div class="value val-green" id="availableCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="title">กุญแจถูกยืมอยู่</div>
+                <div class="value val-red" id="borrowedCount">0</div>
+            </div>
+        </div>
+
+        <!-- โซนข้อความด่วน และ รายการยืมล่าสุด (เติมเต็มหน้าจอคอม) -->
+        <div class="dashboard-grid">
+            
+            <!-- ตารางยืมค้างอยู่ล่าสุด -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>🔑 กุญแจที่กำลังถูกยืมขณะนี้</h3>
+                    <a href="history.html" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: bold;">ดูประวัติทั้งหมด →</a>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>กุญแจ</th>
+                                <th>ผู้ยืม</th>
+                                <th>เวลาที่ยืม</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeBorrowList">
+                            <!-- ข้อมูล JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- กล่องข้อความด่วน / ประกาศระบบ -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>📢 ประกาศ / ข้อความด่วน</h3>
+                </div>
+                
+                <div class="notice-box">
+                    <div class="notice-title">⚠️ กฎการคืนกุญแจ</div>
+                    <div class="notice-desc">กรุณานำกุญแจมาคืนทันทีหลังจากเสร็จสิ้นการใช้งาน หรือไม่เกินเวลา 17:00 น. ของทุกวัน</div>
+                </div>
+
+                <div class="notice-box" style="background: #eff6ff; border-left-color: #3b82f6;">
+                    <div class="notice-title" style="color: #1e40af;">ℹ️ ปิดปรับปรุงประจำสัปดาห์</div>
+                    <div class="notice-desc">ตึกเรียนจะทำการปิดทำความสะอาดทุกวันศุกร์ หลังเวลา 18:30 น. เป็นต้นไป</div>
+                </div>
+            </div>
+
         </div>
     </section>
 </main>
+
 <script>
 const roomsData = [
-    { keyId: "K121", roomId: "R121", roomName: "ห้อง 121", building: "อาคาร 1", floor: "ชั้น 1", computers: 30, keyStatus: "ว่าง" },
-    { keyId: "K122", roomId: "R122", roomName: "ห้อง 122", building: "อาคาร 1", floor: "ชั้น 1", computers: 30, keyStatus: "ว่าง" },
-    { keyId: "K124", roomId: "R124", roomName: "ห้อง 124", building: "อาคาร 1", floor: "ชั้น 1", computers: 35, keyStatus: "ว่าง" },
-    { keyId: "K125", roomId: "R125", roomName: "ห้อง 125", building: "อาคาร 1", floor: "ชั้น 1", computers: 35, keyStatus: "ว่าง" },
-    { keyId: "K141", roomId: "R141", roomName: "ห้อง 141", building: "อาคาร 1", floor: "ชั้น 2", computers: 40, keyStatus: "ว่าง" },
-    { keyId: "K142", roomId: "R142", roomName: "ห้อง 142", building: "อาคาร 1", floor: "ชั้น 2", computers: 40, keyStatus: "ว่าง" },
-    { keyId: "K145", roomId: "R145", roomName: "ห้อง 145", building: "อาคาร 1", floor: "ชั้น 2", computers: 30, keyStatus: "ว่าง" }
+    { keyId: "K121", roomName: "ห้อง 121" },
+    { keyId: "K122", roomName: "ห้อง 122" },
+    { keyId: "K124", roomName: "ห้อง 124" },
+    { keyId: "K125", roomName: "ห้อง 125" },
+    { keyId: "K141", roomName: "ห้อง 141" },
+    { keyId: "K142", roomName: "ห้อง 142" },
+    { keyId: "K145", roomName: "ห้อง 145" }
 ];
 
 function updateDashboard() {
     const history = JSON.parse(localStorage.getItem("borrowLogs")) || [];
-    let borrowedCount = 0;
-    roomsData.forEach(r => {
-        const lastRecord = history.slice().reverse().find(item => item.keyId === r.keyId);
-        if (lastRecord && lastRecord.status === "ยืมอยู่") {
-            borrowedCount++;
-        }
-    });
-    document.getElementById("totalRooms").innerText = roomsData.length;
-    document.getElementById("borrowedRooms").innerText = borrowedCount;
-    document.getElementById("availableRooms").innerText = roomsData.length - borrowedCount;
+    
+    // หาตัวที่ยังยืมอยู่
+    const activeBorrows = history.filter(item => item.status === "ยืมอยู่" || !item.returnTime || item.returnTime === "-");
+    
+    // อัปเดตตัวเลข Stats
+    document.getElementById("totalRoomsCount").textContent = roomsData.length;
+    document.getElementById("borrowedCount").textContent = activeBorrows.length;
+    document.getElementById("availableCount").textContent = roomsData.length - activeBorrows.length;
+
+    // อัปเดตตารางรายการที่ยืมอยู่
+    const listBody = document.getElementById("activeBorrowList");
+    if (activeBorrows.length === 0) {
+        listBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#94a3b8; padding: 15px;">ไม่มีกุญแจที่ถูกยืมในขณะนี้</td></tr>`;
+        return;
+    }
+
+    listBody.innerHTML = activeBorrows.map(item => {
+        const roomObj = roomsData.find(r => r.keyId === item.keyId);
+        const roomName = roomObj ? roomObj.roomName : item.keyId;
+        return `
+            <tr>
+                <td><b style="color:#2563eb;">${roomName}</b> <span style="font-size:11px; color:#64748b;">(${item.keyId})</span></td>
+                <td><b>${item.borrowerName || '-'}</b></td>
+                <td style="font-size:12px; color:#64748b;">${item.borrowTime || '-'}</td>
+            </tr>
+        `;
+    }).join('');
 }
-updateDashboard();
+
+document.addEventListener("DOMContentLoaded", updateDashboard);
 </script>
 </body>
 </html>
