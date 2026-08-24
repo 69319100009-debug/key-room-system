@@ -14,7 +14,6 @@
     .btn-wrapper { text-align: center; margin-bottom: 16px; }
     .btn-clear { background-color: #ff3b30; color: white; border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
     
-    /* Layout แสดงผลประวัติแบบ Card บนมือถือ */
     .history-container { display: flex; flex-direction: column; gap: 12px; }
     .history-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; }
     .info-group { display: flex; flex-direction: column; gap: 4px; }
@@ -24,8 +23,8 @@
     .time-text { font-size: 12px; color: #475569; margin-top: 6px; }
     
     .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: center; }
-    .status-borrowing { background-color: #d1fae5; color: #065f46; }
-    .status-returned { background-color: #e2e8f0; color: #475569; }
+    .status-borrowing { background-color: #fef3c7; color: #92400e; }
+    .status-returned { background-color: #d1fae5; color: #065f46; }
   </style>
 </head>
 <body>
@@ -39,7 +38,6 @@
         <button class="btn-clear" onclick="clearHistory()">ล้างข้อมูลประวัติ</button>
       </div>
 
-      <!-- รายการประวัติจะถูกเรนเดอร์ลงในนี้ -->
       <div id="historyContainer" class="history-container"></div>
     </div>
   </div>
@@ -48,7 +46,6 @@
     function renderHistory() {
       const container = document.getElementById('historyContainer');
       
-      // ดึงข้อมูลจาก localStorage
       let logs = JSON.parse(localStorage.getItem('borrowLogs')) || JSON.parse(localStorage.getItem('history')) || [];
 
       if (logs.length === 0) {
@@ -59,7 +56,12 @@
       container.innerHTML = logs.map(item => {
         const name = item.name || item.studentName || item.borrowerName || item.borrower || 'ไม่ระบุชื่อ';
         const id = item.id || item.studentId || item.code || item.borrowerId || '-';
-        const room = item.room || item.roomNumber || item.roomName || item.keyRoom || 'ไม่ระบุห้อง';
+        
+        // ดักจับชื่อตัวแปรของห้องทุกกรณีที่เป็นไปได้
+        const room = item.room || item.roomNum || item.roomNumber || item.room_number || 
+                     item.roomName || item.roomId || item.selectedRoom || item.keyRoom || 
+                     item.key || item.location || 'ไม่ระบุห้อง';
+                     
         const borrowTime = item.borrowTime || item.time || item.date || item.borrowDate || '-';
         const returnTime = item.returnTime || item.returnDate || '-';
         const isReturned = returnTime !== '-' && returnTime !== '';
