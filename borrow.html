@@ -74,10 +74,6 @@
                     <label>เลือกห้องเรียน *</label>
                     <select id="roomSelect" required><option value="">-- เลือกห้องเรียน --</option></select>
                 </div>
-                <div class="form-group">
-                    <label>วัตถุประสงค์การใช้ห้อง</label>
-                    <input type="text" id="purpose" placeholder="เช่น การเรียนการสอน, ประชุม">
-                </div>
                 <button type="submit" class="btn-submit">ยืนยันการยืมกุญแจ</button>
             </form>
         </div>
@@ -105,12 +101,11 @@ document.getElementById("borrowForm").addEventListener("submit", function(e) {
     e.preventDefault();
     const name = document.getElementById("borrowerName").value;
     const room = document.getElementById("roomSelect").value;
-    const purpose = document.getElementById("purpose").value;
     if(!room) return alert("กรุณาเลือกห้องเรียน");
     const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
     const now = new Date();
     const dateStr = now.toLocaleDateString('th-TH') + " " + now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
-    history.push({ id: Date.now(), type: "ยืม", name: name, room: room, purpose: purpose, date: dateStr });
+    history.push({ id: Date.now(), type: "ยืม", name: name, room: room, purpose: "-", date: dateStr });
     localStorage.setItem("keyHistory", JSON.stringify(history));
     alert("บันทึกการยืมกุญแจ " + room + " เรียบร้อย!");
     window.location.href = "index.html";
