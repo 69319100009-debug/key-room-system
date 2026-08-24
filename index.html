@@ -8,7 +8,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
         body { background: #f4f7fb; color: #17213a; }
         
-        /* Layout Sidebar & Main */
         .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: linear-gradient(180deg, #17295d, #285edc); color: white; padding: 20px 10px; display: flex; flex-direction: column; justify-content: space-between; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,.2); }
         .logo-icon { font-size: 25px; }
@@ -20,10 +19,8 @@
         .main { margin-left: 220px; min-height: 100vh; }
         .header { height: 70px; background: white; border-bottom: 1px solid #e5e9f0; display: flex; align-items: center; justify-content: space-between; padding: 0 35px; }
         
-        /* Content Area */
         .content { padding: 30px 35px; display: flex; flex-direction: column; gap: 24px; }
         
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .stat-card { background: white; padding: 24px; border-radius: 14px; border: 1px solid #e2e8f1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .stat-card .title { font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 8px; }
@@ -32,26 +29,20 @@
         .val-green { color: #16a34a; }
         .val-red { color: #dc2626; }
 
-        /* Dashboard Lower Section Grid (คอมพิวเตอร์) */
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        
-        /* Card Boxes */
         .dashboard-card { background: white; padding: 24px; border-radius: 14px; border: 1px solid #e2e8f1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
         .card-header h3 { font-size: 16px; color: #0f172a; }
         
-        /* Urgent Notice Styles */
-        .notice-box { background: #fff1f2; border-left: 4px solid #f43f5e; padding: 12px 14px; border-radius: 8px; margin-bottom: 12px; }
+        .notice-box { background: #fff1f2; border-left: 4px solid #f43f5e; padding: 12px 14px; border-radius: 8px; }
         .notice-title { font-size: 13px; font-weight: bold; color: #be123c; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
         .notice-desc { font-size: 12px; color: #475569; line-height: 1.4; }
         
-        /* Table Quick View */
         .table-responsive { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
         th { color: #64748b; font-weight: 600; background: #f8fafc; }
 
-        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
         }
@@ -89,7 +80,6 @@
     </header>
 
     <section class="content">
-        <!-- 3 การ์ดตัวเลขสรุป -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="title">ห้องทั้งหมด</div>
@@ -105,10 +95,7 @@
             </div>
         </div>
 
-        <!-- โซนข้อความด่วน และ รายการยืมล่าสุด (เติมเต็มหน้าจอคอม) -->
         <div class="dashboard-grid">
-            
-            <!-- ตารางยืมค้างอยู่ล่าสุด -->
             <div class="dashboard-card">
                 <div class="card-header">
                     <h3>🔑 กุญแจที่กำลังถูกยืมขณะนี้</h3>
@@ -124,13 +111,11 @@
                             </tr>
                         </thead>
                         <tbody id="activeBorrowList">
-                            <!-- ข้อมูล JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- กล่องข้อความด่วน / ประกาศระบบ -->
             <div class="dashboard-card">
                 <div class="card-header">
                     <h3>📢 ประกาศ / ข้อความด่วน</h3>
@@ -140,13 +125,7 @@
                     <div class="notice-title">⚠️ กฎการคืนกุญแจ</div>
                     <div class="notice-desc">กรุณานำกุญแจมาคืนทันทีหลังจากเสร็จสิ้นการใช้งาน หรือไม่เกินเวลา 17:00 น. ของทุกวัน</div>
                 </div>
-
-                <div class="notice-box" style="background: #eff6ff; border-left-color: #3b82f6;">
-                    <div class="notice-title" style="color: #1e40af;">ℹ️ ปิดปรับปรุงประจำสัปดาห์</div>
-                    <div class="notice-desc">ตึกเรียนจะทำการปิดทำความสะอาดทุกวันศุกร์ หลังเวลา 18:30 น. เป็นต้นไป</div>
-                </div>
             </div>
-
         </div>
     </section>
 </main>
@@ -164,16 +143,12 @@ const roomsData = [
 
 function updateDashboard() {
     const history = JSON.parse(localStorage.getItem("borrowLogs")) || [];
-    
-    // หาตัวที่ยังยืมอยู่
     const activeBorrows = history.filter(item => item.status === "ยืมอยู่" || !item.returnTime || item.returnTime === "-");
     
-    // อัปเดตตัวเลข Stats
     document.getElementById("totalRoomsCount").textContent = roomsData.length;
     document.getElementById("borrowedCount").textContent = activeBorrows.length;
     document.getElementById("availableCount").textContent = roomsData.length - activeBorrows.length;
 
-    // อัปเดตตารางรายการที่ยืมอยู่
     const listBody = document.getElementById("activeBorrowList");
     if (activeBorrows.length === 0) {
         listBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#94a3b8; padding: 15px;">ไม่มีกุญแจที่ถูกยืมในขณะนี้</td></tr>`;
