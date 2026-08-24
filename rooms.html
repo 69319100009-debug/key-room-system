@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ห้องเรียน | Key Room</title>
+    <title>กุญแจและห้องเรียน | Key Room System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f4f7fb; color: #17213a; }
@@ -15,26 +15,20 @@
         .menu-title { font-size: 11px; color: #b8c7ed; padding: 0 12px 10px; }
         .menu a { display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 12px; color: white; text-decoration: none; border-radius: 10px; font-size: 13px; }
         .menu a:hover, .menu a.active { background: rgba(255,255,255,.16); }
-        .admin-profile { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .admin-avatar { width: 35px; height: 35px; background: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .main { margin-left: 220px; min-height: 100vh; }
         .header { height: 70px; background: white; border-bottom: 1px solid #e5e9f0; display: flex; align-items: center; justify-content: space-between; padding: 0 35px; }
-        .header h2 { font-size: 18px; }
-        .date { background: #eef5ff; color: #2861d7; padding: 6px 12px; border-radius: 8px; font-size: 11px; }
-        .content { padding: 30px 35px; display: flex; flex-direction: column; gap: 25px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .room-card { background: white; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f1; position: relative; }
-        .room-num { font-size: 32px; font-weight: bold; color: #2563eb; }
+        .content { padding: 30px 35px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 14px; padding: 20px; border: 1px solid #e2e8f1; position: relative; }
         .badge { position: absolute; top: 20px; right: 20px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        .status-ready { background: #dcfce7; color: #166534; }
-        .status-borrowed { background: #fee2e2; color: #991b1b; }
+        .badge-ready { background: #dcfce7; color: #166534; }
+        .badge-borrowed { background: #fee2e2; color: #991b1b; }
+        .detail-item { font-size: 12px; color: #64748b; margin-top: 6px; }
 
         @media (max-width: 768px) {
             .sidebar { position: relative; width: 100%; height: auto; padding: 15px; }
-            .logo { margin-bottom: 10px; }
             .menu { display: flex; flex-wrap: wrap; gap: 5px; }
             .menu a { flex: 1 1 calc(50% - 5px); height: 40px; font-size: 12px; justify-content: center; }
-            .admin-profile { display: none; }
             .main { margin-left: 0; }
             .header { padding: 0 15px; }
             .content { padding: 15px; }
@@ -44,59 +38,57 @@
 <body>
 <aside class="sidebar">
     <div>
-        <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบยืม-คืนกุญแจ</p></div></div>
+        <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบจัดการกุญแจ</p></div></div>
         <div class="menu-title">เมนูหลัก</div>
         <nav class="menu">
             <a href="index.html"><span>🏠</span><span>หน้าหลัก</span></a>
-            <a href="rooms.html" class="active"><span>🏫</span><span>ห้องเรียน</span></a>
+            <a href="rooms.html" class="active"><span>🏫</span><span>กุญแจ/ห้องเรียน</span></a>
             <a href="borrow.html"><span>🔑</span><span>ยืมกุญแจ</span></a>
             <a href="return.html"><span>↩️</span><span>คืนกุญแจ</span></a>
             <a href="history.html"><span>📋</span><span>ประวัติ</span></a>
         </nav>
     </div>
-    <div class="admin-profile"><div class="admin-avatar">A</div><div><div style="font-size:12px; font-weight:bold;">ผู้ดูแลระบบ</div><div style="font-size:10px; color:#cbd6f2;">Administrator</div></div></div>
 </aside>
 <main class="main">
     <header class="header">
-        <div><div style="font-size: 11px; color: #94a3b8;">หน้าหลัก / ห้องเรียน</div><h2>รายการห้องเรียนทั้งหมด</h2></div>
-        <div class="date">📅 ระบบจัดการกุญแจ</div>
+        <div><div style="font-size: 11px; color: #94a3b8;">หน้าหลัก / กุญแจและห้องเรียน</div><h2>รายการห้องเรียนทั้งหมด</h2></div>
     </header>
     <section class="content">
-        <h3>ตรวจสอบสถานะห้องเรียนและกุญแจ</h3>
-        <div class="grid" id="roomsList"></div>
+        <div class="grid" id="roomsGrid"></div>
     </section>
 </main>
 <script>
 const roomsData = [
-    { name: "ห้อง 121", key: "K121", floor: "ชั้น 1" },
-    { name: "ห้อง 122", key: "K122", floor: "ชั้น 1" },
-    { name: "ห้อง 124", key: "K124", floor: "ชั้น 1" },
-    { name: "ห้อง 125", key: "K125", floor: "ชั้น 1" },
-    { name: "ห้อง 141", key: "K141", floor: "ชั้น 2" },
-    { name: "ห้อง 142", key: "K142", floor: "ชั้น 2" },
-    { name: "ห้อง 145", key: "K145", floor: "ชั้น 2" }
+    { keyId: "K121", roomId: "R121", roomName: "ห้อง 121", building: "อาคารเรียน 1", floor: "ชั้น 1", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 30, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K122", roomId: "R122", roomName: "ห้อง 122", building: "อาคารเรียน 1", floor: "ชั้น 1", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 30, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K124", roomId: "R124", roomName: "ห้อง 124", building: "อาคารเรียน 1", floor: "ชั้น 1", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 35, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K125", roomId: "R125", roomName: "ห้อง 125", building: "อาคารเรียน 1", floor: "ชั้น 1", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 35, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K141", roomId: "R141", roomName: "ห้อง 141", building: "อาคารเรียน 1", floor: "ชั้น 2", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 40, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K142", roomId: "R142", roomName: "ห้อง 142", building: "อาคารเรียน 1", floor: "ชั้น 2", roomType: "ห้องปฏิบัติการคอมพิวเตอร์", computers: 40, manager: "อ.ผู้ดูแลระบบ" },
+    { keyId: "K145", roomId: "R145", roomName: "ห้อง 145", building: "อาคารเรียน 1", floor: "ชั้น 2", roomType: "ห้องบรรยาย", computers: 0, manager: "อ.ผู้ดูแลระบบ" }
 ];
-function render() {
-    const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
-    const container = document.getElementById("roomsList");
+
+function renderRooms() {
+    const history = JSON.parse(localStorage.getItem("borrowLogs")) || [];
+    const container = document.getElementById("roomsGrid");
     container.innerHTML = "";
     roomsData.forEach(r => {
-        const roomNumOnly = r.name.replace(/[^0-9]/g, '');
-        const lastRecord = history.slice().reverse().find(item => item.room && item.room.replace(/[^0-9]/g, '') === roomNumOnly);
-        const isBorrowed = lastRecord && lastRecord.type === "ยืม";
+        const lastRecord = history.slice().reverse().find(item => item.keyId === r.keyId);
+        const isBorrowed = lastRecord && lastRecord.status === "ยืมอยู่";
         const div = document.createElement("div");
-        div.className = "room-card";
+        div.className = "card";
         div.innerHTML = `
-            <span class="badge ${isBorrowed ? 'status-borrowed':'status-ready'}">${isBorrowed ? '🔴 ถูกยืมอยู่':'🟢 พร้อมใช้งาน'}</span>
-            <div class="room-num">${roomNumOnly}</div>
-            <h4 style="margin-top:10px;">${r.name}</h4>
-            <p style="font-size:12px; color:#64748b; margin-top:4px;">กุญแจ: ${r.key}</p>
-            <p style="font-size:11px; color:#94a3b8; margin-top:15px; border-top:1px dashed #e2e8f1; padding-top:10px;">${r.floor}</p>
+            <span class="badge ${isBorrowed ? 'badge-borrowed':'badge-ready'}">${isBorrowed ? '🔴 ถูกยืม':'🟢 ว่าง'}</span>
+            <h3 style="font-size: 22px; color: #2563eb;">${r.roomName}</h3>
+            <div class="detail-item">🔑 รหัสกุญแจ: <b>${r.keyId}</b> | รหัสห้อง: ${r.roomId}</div>
+            <div class="detail-item">🏢 ${r.building} (${r.floor})</div>
+            <div class="detail-item">💻 คอมพิวเตอร์: ${r.computers} เครื่อง</div>
+            <div class="detail-item" style="border-top: 1px dashed #e2e8f1; margin-top: 10px; padding-top: 8px; font-size: 11px;">👤 ผู้ดูแล: ${r.manager}</div>
         `;
         container.appendChild(div);
     });
 }
-render();
+renderRooms();
 </script>
 </body>
 </html>
