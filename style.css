@@ -87,3 +87,37 @@ th {
   font-weight: 600;
   display: inline-block;
 }
+/* จัดการตารางให้รองรับมือถือ */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 480px;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #edf2f7;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f8fafc;
+  color: #64748b;
+}
+
+.status-badge {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
