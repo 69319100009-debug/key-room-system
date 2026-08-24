@@ -14,12 +14,11 @@
 
     <div class="card">
       <div class="btn-wrapper">
-        <button id="clearBtn" class="btn-clear">ล้างข้อมูลประวัติ</button>
+        <button class="btn-clear" onclick="clearHistory()">ล้างข้อมูลประวัติ</button>
       </div>
 
-      <!-- ครอบด้วย table-responsive เพื่อให้สโครลในมือถือได้ -->
       <div class="table-responsive">
-        <table id="historyTable">
+        <table>
           <thead>
             <tr>
               <th>ผู้ยืม (ID / ชื่อ)</th>
@@ -29,13 +28,58 @@
             </tr>
           </thead>
           <tbody id="historyList">
-            <!-- ข้อมูลจาก JavaScript จะถูกดึงมาใส่ตรงนี้ -->
+            <!-- ข้อมูลจะขึ้นตรงนี้อัตโนมัติ -->
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- รวม JS ไว้ในนี้ ไม่ต้องสร้างไฟล์สคริปต์แยก -->
+  <script>
+    function renderHistory() {
+      const historyList = document.getElementById('historyList');
+      
+      // ดึงข้อมูลจาก LocalStorage ถ้าไม่มีจะใช้ข้อมูลตัวอย่างมาแสดงทันที
+      let logs = JSON.parse(localStorage.getItem('borrowLogs')) || [
+        {
+          name: 'ณัฐชนก พุ่มอุทสาห์',
+          id: '69319100009',
+          borrowTime: '24/8/2569 23:37',
+          returnTime: '24/8/2569 23:38',
+          status: 'คืนแล้ว'
+        }
+      ];
+
+      if (logs.length === 0) {
+        historyList.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</td></tr>`;
+        return;
+      }
+
+      historyList.innerHTML = logs.map(item => `
+        <tr>
+          <td>
+            <div style="font-weight: bold; color: #1e293b;">${item.name}</div>
+            <div style="font-size: 12px; color: #64748b;">(${item.id})</div>
+          </td>
+          <td>${item.borrowTime}</td>
+          <td>${item.returnTime || '-'}</td>
+          <td>
+            <span class="status-badge">${item.status}</span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function clearHistory() {
+      if (confirm('คุณต้องการล้างข้อมูลประวัติทั้งหมดใช่หรือไม่?')) {
+        localStorage.removeItem('borrowLogs');
+        renderHistory();
+      }
+    }
+
+    // ทำงานทันทีเมื่อโหลดหน้าเว็บ
+    document.addEventListener('DOMContentLoaded', renderHistory);
+  </script>
 </body>
 </html>
