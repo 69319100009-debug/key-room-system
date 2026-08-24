@@ -22,6 +22,7 @@
           <thead>
             <tr>
               <th>ผู้ยืม (ID / ชื่อ)</th>
+              <th>ห้อง</th>
               <th>วันเวลาที่ยืม</th>
               <th>วันเวลาที่คืน</th>
               <th>สถานะ</th>
@@ -39,21 +40,21 @@
     function renderHistory() {
       const historyList = document.getElementById('historyList');
       
-      // ดึงข้อมูลจาก LocalStorage
       let logs = JSON.parse(localStorage.getItem('borrowLogs')) || JSON.parse(localStorage.getItem('history')) || [];
 
       if (logs.length === 0) {
-        historyList.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</td></tr>`;
+        historyList.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #888;">ไม่มีข้อมูลประวัติ</td></tr>`;
         return;
       }
 
       historyList.innerHTML = logs.map(item => {
-        // ดึงค่าแบบดักจับทุกชื่อตัวแปรเพื่อแก้ปัญหา undefined
         const name = item.name || item.studentName || item.borrowerName || item.borrower || 'ไม่ระบุชื่อ';
         const id = item.id || item.studentId || item.code || item.borrowerId || '-';
+        // ดักจับชื่อตัวแปรของห้อง
+        const room = item.room || item.roomNumber || item.roomName || item.keyRoom || '-';
         const borrowTime = item.borrowTime || item.time || item.date || item.borrowDate || '-';
         const returnTime = item.returnTime || item.returnDate || '-';
-        const status = item.status || (item.returnTime ? 'คืนแล้ว' : 'กำลังยืม');
+        const status = item.status || (item.returnTime ? 'คืนแล้ว' : 'ยืมอยู่');
 
         return `
           <tr>
@@ -61,10 +62,15 @@
               <div style="font-weight: bold; color: #1e293b;">${name}</div>
               <div style="font-size: 12px; color: #64748b;">(${id})</div>
             </td>
+            <td>
+              <span style="font-weight: 600; color: #2563eb;">${room}</span>
+            </td>
             <td>${borrowTime}</td>
             <td>${returnTime}</td>
             <td>
-              <span class="status-badge">${status}</span>
+              <span class="status-badge" style="background-color: ${status === 'คืนแล้ว' ? '#d1fae5' : '#fef3c7'}; color: ${status === 'คืนแล้ว' ? '#065f46' : '#92400e'};">
+                ${status}
+              </span>
             </td>
           </tr>
         `;
