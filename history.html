@@ -9,47 +9,33 @@
 <body>
 
   <div class="container">
-    <!-- Breadcrumb & Header -->
     <div class="breadcrumb">หน้าหลัก / ประวัติ</div>
     <h1 class="page-title">บันทึกการยืม-คืน (Borrow Logs)</h1>
 
-    <!-- Card Wrapper -->
-    <div class="main-card">
-      
-      <!-- Action Button -->
-      <div class="action-bar">
-        <button class="btn-delete">ล้างข้อมูลประวัติ</button>
+    <div class="card">
+      <div class="btn-wrapper">
+        <button id="clearBtn" class="btn-clear">ล้างข้อมูลประวัติ</button>
       </div>
 
-      <!-- Log Items Container (Responsive View) -->
-      <div class="log-list">
-        
-        <!-- Record Item 1 -->
-        <div class="log-item">
-          <div class="user-info">
-            <div class="user-name">ณัฐชนก พุ่มอุทสาห์</div>
-            <div class="user-id">(69319100009)</div>
-          </div>
-          
-          <div class="time-info">
-            <div class="time-row">
-              <span class="label">ยืม:</span> 
-              <span class="value">24/8/2569 23:37</span>
-            </div>
-            <div class="time-row">
-              <span class="label">คืน:</span> 
-              <span class="value">24/8/2569 23:38</span>
-            </div>
-          </div>
-
-          <div class="status-wrap">
-            <span class="status-badge status-returned">คืนแล้ว</span>
-          </div>
-        </div>
-
+      <!-- ครอบด้วย table-responsive เพื่อให้สโครลในมือถือได้ -->
+      <div class="table-responsive">
+        <table id="historyTable">
+          <thead>
+            <tr>
+              <th>ผู้ยืม (ID / ชื่อ)</th>
+              <th>วันเวลาที่ยืม</th>
+              <th>วันเวลาที่คืน</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="historyList">
+            <!-- ข้อมูลจาก JavaScript จะถูกดึงมาใส่ตรงนี้ -->
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
+  <script src="script.js"></script>
 </body>
 </html>
