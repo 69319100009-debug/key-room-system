@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>คืนกุญแจ | Key Room</title>
+    <title>คืนกุญแจ | Key Room System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f4f7fb; color: #17213a; }
@@ -15,26 +15,19 @@
         .menu-title { font-size: 11px; color: #b8c7ed; padding: 0 12px 10px; }
         .menu a { display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 12px; color: white; text-decoration: none; border-radius: 10px; font-size: 13px; }
         .menu a:hover, .menu a.active { background: rgba(255,255,255,.16); }
-        .admin-profile { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .admin-avatar { width: 35px; height: 35px; background: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .main { margin-left: 220px; min-height: 100vh; }
         .header { height: 70px; background: white; border-bottom: 1px solid #e5e9f0; display: flex; align-items: center; justify-content: space-between; padding: 0 35px; }
-        .header h2 { font-size: 18px; }
-        .date { background: #eef5ff; color: #2861d7; padding: 6px 12px; border-radius: 8px; font-size: 11px; }
         .content { padding: 30px 35px; display: flex; justify-content: center; }
         .form-card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 14px; border: 1px solid #e2e8f1; }
-        .form-group { margin-bottom: 18px; }
+        .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; }
         .form-group input, .form-group select { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
-        .btn-submit { width: 100%; height: 45px; background: #16a34a; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
-        .btn-submit:hover { background: #15803d; }
+        .btn-submit { width: 100%; height: 45px; background: #16a34a; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         @media (max-width: 768px) {
             .sidebar { position: relative; width: 100%; height: auto; padding: 15px; }
-            .logo { margin-bottom: 10px; }
             .menu { display: flex; flex-wrap: wrap; gap: 5px; }
             .menu a { flex: 1 1 calc(50% - 5px); height: 40px; font-size: 12px; justify-content: center; }
-            .admin-profile { display: none; }
             .main { margin-left: 0; }
             .header { padding: 0 15px; }
             .content { padding: 15px; }
@@ -44,42 +37,32 @@
 <body>
 <aside class="sidebar">
     <div>
-        <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบยืม-คืนกุญแจ</p></div></div>
+        <div class="logo"><div class="logo-icon">🔑</div><div><h1>Key Room</h1><p>ระบบจัดการกุญแจ</p></div></div>
         <div class="menu-title">เมนูหลัก</div>
         <nav class="menu">
             <a href="index.html"><span>🏠</span><span>หน้าหลัก</span></a>
-            <a href="rooms.html"><span>🏫</span><span>ห้องเรียน</span></a>
+            <a href="rooms.html"><span>🏫</span><span>กุญแจ/ห้องเรียน</span></a>
             <a href="borrow.html"><span>🔑</span><span>ยืมกุญแจ</span></a>
             <a href="return.html" class="active"><span>↩️</span><span>คืนกุญแจ</span></a>
             <a href="history.html"><span>📋</span><span>ประวัติ</span></a>
         </nav>
     </div>
-    <div class="admin-profile"><div class="admin-avatar">A</div><div><div style="font-size:12px; font-weight:bold;">ผู้ดูแลระบบ</div><div style="font-size:10px; color:#cbd6f2;">Administrator</div></div></div>
 </aside>
 <main class="main">
     <header class="header">
         <div><div style="font-size: 11px; color: #94a3b8;">หน้าหลัก / คืนกุญแจ</div><h2>บันทึกการคืนกุญแจ</h2></div>
-        <div class="date">📅 24 สิงหาคม 2569</div>
     </header>
     <section class="content">
         <div class="form-card">
-            <h3 style="margin-bottom: 5px;">↩️ คืนกุญแจ</h3>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 20px;">กรอกข้อมูลสำหรับบันทึกการคืนกุญแจห้องเรียน</p>
+            <h3 style="margin-bottom: 15px;">↩️ แบบฟอร์มคืนกุญแจ</h3>
             <form id="returnForm">
                 <div class="form-group">
-                    <label>ชื่อผู้คืน *</label>
-                    <input type="text" id="returnerName" placeholder="กรอกชื่อผู้ทำรายการคืน" required>
+                    <label>เลือกกุญแจที่ต้องการคืน *</label>
+                    <select id="keySelect" required><option value="">-- เลือกกุญแจ --</option></select>
                 </div>
                 <div class="form-group">
-                    <label>ห้องเรียน (แสดงเฉพาะห้องที่ยืมอยู่) *</label>
-                    <select id="roomSelect" required><option value="">-- เลือกห้องที่จะคืน --</option></select>
-                </div>
-                <div class="form-group">
-                    <label>สภาพกุญแจ</label>
-                    <select id="condition">
-                        <option value="ปกติ">ปกติสมบูรณ์</option>
-                        <option value="ชำรุด/สูญหาย">ชำรุด / สูญหาย</option>
-                    </select>
+                    <label>รายงานความเสียหาย (ถ้ามี)</label>
+                    <input type="text" id="damageReport" placeholder="เช่น ไม่มี, อุปกรณ์ชำรุด">
                 </div>
                 <button type="submit" class="btn-submit">ยืนยันการคืนกุญแจ</button>
             </form>
@@ -87,43 +70,56 @@
     </section>
 </main>
 <script>
-const allRooms = ["ห้อง 121", "ห้อง 122", "ห้อง 124", "ห้อง 125", "ห้อง 141", "ห้อง 142", "ห้อง 145"];
-function getRoomNum(str) { return str ? str.replace(/[^0-9]/g, '') : ''; }
-function loadBorrowedRooms() {
-    const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
-    const select = document.getElementById("roomSelect");
-    select.innerHTML = '<option value="">-- เลือกห้องที่จะคืน --</option>';
+function loadBorrowedKeys() {
+    const history = JSON.parse(localStorage.getItem("borrowLogs")) || [];
+    const select = document.getElementById("keySelect");
+    select.innerHTML = '<option value="">-- เลือกกุญแจ --</option>';
     let count = 0;
-    allRooms.forEach(room => {
-        const roomNum = getRoomNum(room);
-        const lastRecord = history.slice().reverse().find(item => getRoomNum(item.room) === roomNum);
-        if (lastRecord && lastRecord.type === "ยืม") {
-            const opt = document.createElement("option");
-            opt.value = room;
-            opt.textContent = `${room} (ยืมโดย: ${lastRecord.name})`;
-            select.appendChild(opt);
-            count++;
-        }
+    
+    // ดึงเฉพาะรายการล่าสุดที่ยืมอยู่
+    const uniqueKeys = {};
+    history.forEach(item => {
+        if(item.status === "ยืมอยู่") uniqueKeys[item.keyId] = item;
+        else if(item.status === "คืนแล้ว") delete uniqueKeys[item.keyId];
     });
-    if(count === 0) {
-        select.innerHTML = '<option value="">-- ไม่มีห้องที่ถูกยืมอยู่ --</option>';
-    }
+
+    Object.values(uniqueKeys).forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.keyId;
+        opt.textContent = `${item.keyId} (ผู้ยืม: ${item.borrowerName})`;
+        select.appendChild(opt);
+        count++;
+    });
+
+    if (count === 0) select.innerHTML = '<option value="">-- ไม่มีกุญแจที่ถูกยืมอยู่ --</option>';
 }
+
 document.getElementById("returnForm").addEventListener("submit", function(e) {
     e.preventDefault();
-    const name = document.getElementById("returnerName").value;
-    const room = document.getElementById("roomSelect").value;
-    const condition = document.getElementById("condition").value;
-    if(!room) return alert("กรุณาเลือกห้องที่จะคืน");
-    const history = JSON.parse(localStorage.getItem("keyHistory")) || [];
+    const keyId = document.getElementById("keySelect").value;
+    const damage = document.getElementById("damageReport").value || "ปกติ";
+    if(!keyId) return alert("กรุณาเลือกกุญแจ");
+
+    const history = JSON.parse(localStorage.getItem("borrowLogs")) || [];
     const now = new Date();
-    const dateStr = now.toLocaleDateString('th-TH') + " " + now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
-    history.push({ id: Date.now(), type: "คืน", name: name, room: room, purpose: "สภาพ: " + condition, date: dateStr });
-    localStorage.setItem("keyHistory", JSON.stringify(history));
-    alert("บันทึกการคืนกุญแจ " + room + " เรียบร้อย!");
+    const returnTime = now.toLocaleDateString('th-TH') + " " + now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+
+    // หาประวัติการยืมตัวล่าสุดของกุญแจนี้แล้วปรับสถานะ
+    for (let i = history.length - 1; i >= 0; i--) {
+        if (history[i].keyId === keyId && history[i].status === "ยืมอยู่") {
+            history[i].returnTime = returnTime;
+            history[i].status = "คืนแล้ว";
+            history[i].damageReport = damage;
+            break;
+        }
+    }
+
+    localStorage.setItem("borrowLogs", JSON.stringify(history));
+    alert("บันทึกการคืนกุญแจ " + keyId + " เรียบร้อย!");
     window.location.href = "index.html";
 });
-loadBorrowedRooms();
+
+loadBorrowedKeys();
 </script>
 </body>
 </html>
